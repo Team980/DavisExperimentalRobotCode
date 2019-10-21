@@ -7,11 +7,44 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	private Joystick throttle;
+	private Joystick wheel;
+	private XboxController xBox;
+	private Joystick prajBox;
+
+  OI () {
+		throttle = new Joystick(0);
+		wheel = new Joystick(1);
+		xBox = new XboxController(2);
+		prajBox = new Joystick(3);
+  }
+
+  public Joystick getThrottle() {
+    return this.throttle;
+  }
+
+  public Joystick getWheel() {
+    return this.wheel;
+  }
+
+  public XboxController getXBox() {
+    return this.xBox;
+  }
+
+  public Joystick getPrajBox() {
+    return this.prajBox;
+  }
+
+
+}
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a
   //// joystick.
@@ -39,4 +72,3 @@ public class OI {
   // Start the command when the button is released and let it run the command
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
-}
