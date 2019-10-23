@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.EncoderDrive;
+import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -40,10 +41,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotMap = new RobotMap();
-    oi = new OI();
-    drivetrain = new Drivetrain(robotMap, oi);
+    drivetrain = new Drivetrain(robotMap);
+    oi = new OI(drivetrain);
 
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
+    if (oi.getEnablePIDDrive()){
+      drivetrain.enablePID();
+    }//end enable PID drive if switch is flipped at the beginning
+
+    m_chooser.setDefaultOption("Default Auto", new EncoderDrive(drivetrain , robotMap , 5));
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
   }
@@ -120,6 +125,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    drivetrain.setDefaultCommand(new TeleopDrive(drivetrain , oi));
   }
 
   /**

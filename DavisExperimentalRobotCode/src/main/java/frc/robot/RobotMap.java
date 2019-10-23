@@ -72,7 +72,7 @@ public class RobotMap {
 		//(Channel A port, Channel B port, is it inverted true/false, encoder type)
 		leftDriveEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_TICK);
 
-		rightDriveEncoder = new Encoder(4, 5, true, CounterBase.EncodingType.k4X);
+		rightDriveEncoder = new Encoder(4, 5, false, CounterBase.EncodingType.k4X);
 		//(Channel A port, Channel B port, is it inverted true/false, encoder type)
 		rightDriveEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_TICK);
 

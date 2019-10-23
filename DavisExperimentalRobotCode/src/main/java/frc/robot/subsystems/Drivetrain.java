@@ -20,9 +20,22 @@ public class Drivetrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public Drivetrain(RobotMap robotMap , OI oi){
+  public Drivetrain(RobotMap robotMap){
     drive980 = new DifferentialDrive980(robotMap.getLeftDrive(), robotMap.getRightDrive(), robotMap);
   }
+
+  public void TeleopDrive(double speed , double turn , boolean squaredInputs , boolean enablePID){
+    drive980.arcadeDrive(speed, turn , squaredInputs , enablePID);
+  }
+
+  public void enablePID() {
+    drive980.enablePID();
+  }
+
+  public void disablePID() {
+    drive980.disablePID();
+  }
+  
 
   @Override
   public void initDefaultCommand() {

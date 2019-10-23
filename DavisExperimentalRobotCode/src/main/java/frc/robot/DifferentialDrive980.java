@@ -163,7 +163,7 @@ public class DifferentialDrive980 extends RobotDriveBase {
    *                  positive.
    */
   @SuppressWarnings("ParameterName")
-  public void arcadeDrive(double xSpeed, double zRotation) {
+  public void arcadeDrive(double xSpeed, double zRotation , boolean enablePID) {
     arcadeDrive(xSpeed, zRotation, true);
   }
 
@@ -176,7 +176,7 @@ public class DifferentialDrive980 extends RobotDriveBase {
    * @param squareInputs If set, decreases the input sensitivity at low speeds.
    */
   @SuppressWarnings("ParameterName")
-  public void arcadeDrive(double xSpeed, double zRotation, boolean squareInputs) {
+  public void arcadeDrive(double xSpeed, double zRotation, boolean squareInputs , boolean enablePID) {
     if (!m_reported) {
       HAL.report(tResourceType.kResourceType_RobotDrive, 2,
                  tInstances.kRobotDrive2_DifferentialArcade);
@@ -221,8 +221,16 @@ public class DifferentialDrive980 extends RobotDriveBase {
       }
     }
 
-    m_leftMotor.set(limit(leftMotorOutput) * m_maxOutput);
-    m_rightMotor.set(limit(rightMotorOutput) * m_maxOutput * m_rightSideInvertMultiplier);
+    if (enablePID){
+      leftController.setSetpoint(limit(leftMotorOutput) * MAX_VELOCITY);
+      rightController.setSetpoint(limit(rightMotorOutput) * MAX_VELOCITY * m_rightSideInvertMultiplier);
+     
+    }
+    else{
+      m_leftMotor.set(limit(leftMotorOutput) * m_maxOutput);
+      m_rightMotor.set(limit(rightMotorOutput) * m_maxOutput * m_rightSideInvertMultiplier);
+ 
+    }
 
     feed();
   }

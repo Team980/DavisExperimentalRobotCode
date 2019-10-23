@@ -9,6 +9,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.commands.EnablePIDDriveCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -18,13 +21,25 @@ public class OI {
 	private Joystick throttle;
 	private Joystick wheel;
 	private XboxController xBox;
-	private Joystick prajBox;
+  private Joystick prajBox;
 
-  OI () {
+  private double driveWheelAdjustCoefficient = 75;
+  
+  //subsystems oi button commands will be accessing directly
+  private Drivetrain drivetrain;
+
+  OI (Drivetrain drivetrain) {
 		throttle = new Joystick(0);
 		wheel = new Joystick(1);
 		xBox = new XboxController(2);
-		prajBox = new Joystick(3);
+    prajBox = new Joystick(3);
+    
+    this.drivetrain = drivetrain;
+
+    //button Bindings
+    var whiteSwitch = new JoystickButton(prajBox, 7);//enable or disable PID loops, true enables
+    whiteSwitch.whenPressed(new EnablePIDDriveCommand(true , drivetrain));
+    whiteSwitch.whenReleased(new EnablePIDDriveCommand(false , drivetrain));
   }
 
   public Joystick getThrottle() {
@@ -43,6 +58,14 @@ public class OI {
     return this.prajBox;
   }
 
+  public boolean getEnablePIDDrive(){
+    return prajBox.getRawButton(7);
+  }
+
+
+  public double steeringAdjuster(){
+    return wheel.getX() * driveWheelAdjustCoefficient;
+  }
 
 }
   //// CREATING BUTTONS
