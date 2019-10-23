@@ -10,9 +10,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.RobotPositionalAwarenessEngine;
 
 public class EncoderDrive extends Command {
   private Drivetrain drivetrain;
+  private RobotPositionalAwarenessEngine posEng;
+  
   private RobotMap robotMap;
   private double distance;
   private double speedL;
@@ -20,12 +23,13 @@ public class EncoderDrive extends Command {
   private double lastValueL;
   private double lastValueR;
   private int failsafeCountdown;
-  private boolean emergencyKillPID;
+  private boolean emergencyEncoderFailure;
   private double[] ypr;
 
 
-  public EncoderDrive(Drivetrain drivetrain , RobotMap robotMap , double distance) {
+  public EncoderDrive(Drivetrain drivetrain , RobotMap robotMap , RobotPositionalAwarenessEngine posEng ,  double distance) {
     this.drivetrain = drivetrain;
+    this.posEng = posEng;
     this.robotMap = robotMap;
     this.distance = distance;
     speedL = 0.0;
@@ -33,7 +37,7 @@ public class EncoderDrive extends Command {
     lastValueL = 0;
     lastValueR = 0;
     failsafeCountdown = 3;
-    emergencyKillPID = false;
+    emergencyEncoderFailure = false;
     ypr = new double[3];
 
     requires(drivetrain);
@@ -74,7 +78,7 @@ public class EncoderDrive extends Command {
     if (robotMap.getLeftDriveEncoder().getDistance() == lastValueL && (robotMap.getRightDriveEncoder().getDistance() == lastValueR )){
       failsafeCountdown--;
       if (failsafeCountdown == 0){
-        emergencyKillPID = true;
+        emergencyEncoderFailure = true;
         return true;
       }  
     }
@@ -89,7 +93,14 @@ public class EncoderDrive extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    drivetrain.TeleopDrive(0, 0, true, !emergencyKillPID);
+    posEng.setEncoderFailure(emergencyEncoderFailure);
+    if (robotMap.getLeftDriveEncoder().getDistance() >= robotMap.getRightDriveEncoder().getDistance()){
+      posEng.calculateNewPosition(robotMap.getLeftDriveEncoder().getDistance());
+    }
+    else{
+      posEng.calculateNewPosition(robotMap.getRightDriveEncoder().getDistance());
+    }
+    drivetrain.TeleopDrive(0, 0, true, !emergencyEncoderFailure);
   }
 
   // Called when another command which requires one or more of the same
