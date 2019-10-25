@@ -55,6 +55,15 @@ public class RobotPositionalAwarenessEngine extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  public double[] setCourse(double xPos , double yPos){//index 0 is heading, index 1 is range
+    double[] course = new double[2];
+    double yDif = yPos = yPosition;
+    double xDif = xPos - xPosition;
+    course[0] = Math.atan2(yDif, xDif);
+    course[1] = Math.sqrt((yDif) * (yDif) + (xDif) * (xDif));
+    return course;
+  }
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.

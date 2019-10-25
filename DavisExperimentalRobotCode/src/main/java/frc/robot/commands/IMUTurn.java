@@ -17,7 +17,6 @@ public class IMUTurn extends Command {
   private RobotPositionalAwarenessEngine posEng;
   private RobotMap robotMap;
   private double angle;
-  private double currentAngle;
   private double[] ypr;
 
   public IMUTurn(Drivetrain drivetrain , RobotMap robotMap , RobotPositionalAwarenessEngine posEng , double angle) {

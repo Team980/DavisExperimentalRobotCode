@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.EncoderDrive;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.RobotPositionalAwarenessEngine;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
   private RobotMap robotMap;
   private OI oi;
   private Drivetrain drivetrain;
+  private RobotPositionalAwarenessEngine posEng;
   
 
 
@@ -42,13 +44,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     robotMap = new RobotMap();
     drivetrain = new Drivetrain(robotMap);
+    posEng = new RobotPositionalAwarenessEngine(robotMap);
     oi = new OI(drivetrain);
 
     if (oi.getEnablePIDDrive()){
       drivetrain.enablePID();
     }//end enable PID drive if switch is flipped at the beginning
 
-    m_chooser.setDefaultOption("Default Auto", new EncoderDrive(drivetrain , robotMap , 5));
+    m_chooser.setDefaultOption("Default Auto", new EncoderDrive(drivetrain , robotMap , posEng , 5));
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
   }
