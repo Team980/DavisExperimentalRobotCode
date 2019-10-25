@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CounterBase;
 
 /**
@@ -43,7 +44,7 @@ public class RobotMap {
 	private double liftDistancePerTick = Math.PI * (2.899 / 12) / 2048; // used diameter of 2.899
 
 	// wrist
-	// private Potentiometer wristPotentiometer;
+	private AnalogInput wristPot;
 	private SpeedController wristMotor;
 
 	// sensors
@@ -87,8 +88,9 @@ public class RobotMap {
 		liftEncoder.setDistancePerPulse(liftDistancePerTick);
 
 		// wrist
-		//wristPotentiometer = new Potentiometer(0);
+		wristPot = new AnalogInput(0);
 		wristMotor = new WPI_TalonSRX(11);
+
 		//wristMotor.setName("wrist controller");
 
 		// sensors
@@ -100,10 +102,10 @@ public class RobotMap {
 		trophyTruckSolenoid = new Solenoid(2);
 	}
 
+	//drive getters
 	public Encoder getLeftDriveEncoder() {
 		return this.leftDriveEncoder;
 	}
-
 	public Encoder getRightDriveEncoder() {
 		return this.rightDriveEncoder;
 	}
@@ -111,7 +113,6 @@ public class RobotMap {
 	public SpeedControllerGroup getLeftDrive() {
 		return this.leftDrive;
 	}
-
 	public SpeedControllerGroup getRightDrive() {
 		return this.rightDrive;
 	}
@@ -120,6 +121,7 @@ public class RobotMap {
 		return this.shifter;
 	}
 
+	//mechanism getters
 	public SpeedController getEndEffectorIntakeMotor() {
 		return this.endEffectorIntakeMotor;
 	}
@@ -132,14 +134,19 @@ public class RobotMap {
 		return this.liftEncoder;
 	}
 
-	public double getLiftDistancePerTick() {
-		return this.liftDistancePerTick;
-	}
-
 	public SpeedController getWristMotor() {
 		return this.wristMotor;
 	}
 
+	public double getWristAngle(){
+		return (wristPot.getVoltage() / 5) * 360;
+	}
+
+	public Solenoid getTrophyTruckSolenoid() {
+		return this.trophyTruckSolenoid;
+	}
+
+	//sensor getters
 	public PigeonIMU getImu() {
 		return this.imu;
 	}
@@ -147,10 +154,6 @@ public class RobotMap {
 	/*public Limelight getLimelight() {
 		return this.limelight;
 	}*/
-
-	public Solenoid getTrophyTruckSolenoid() {
-		return this.trophyTruckSolenoid;
-	}
 
 
   // For example to map the left and right motors, you could define the
